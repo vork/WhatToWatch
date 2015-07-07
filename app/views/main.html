@@ -1,13 +1,33 @@
-<md-content md-theme="docs-dark" layout-padding
+<div layout="column" layout-fill ng-controller="MainCtrl as mainCtrl">
+  <div flex>
+    <md-content md-theme="docs-dark" layout-padding
   layout="row" layout-sm="column">
-  <md-input-container layout-padding>
-    <label>Username</label>
-    <input > <!-- TODO: add ng-model -->
-  </md-input-container>
-</md-content>
-
-<md-content style="height: auto">
-  <div layout="row" layout-sm="column" layout-align="center center">
-    <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+      <md-input-container flex>
+        <label>Username</label>
+        <input > <!-- TODO: add ng-model -->
+      </md-input-container>
+      <md-button class="md-raised md-primary" flex="33">Find series to watch</md-button>
+    </md-content>
   </div>
-</md-content>
+
+  <!-- inset trending shows here -->
+  <div flex>
+    <md-content layout-fill layout-padding>
+      <h3>Trending shows:</h3>
+      <md-grid-list
+        md-cols-gt-md="6" md-cols-sm="2" md-cols-md="4"
+        md-row-height-gt-md="1:1" md-row-height="4:3"
+        md-gutter-gt-md="16px" md-gutter-gt-sm="8px"
+        md-gutter="4px">
+        <md-grid-tile
+          ng-repeat="tile in mainCtrl.shows"
+          ng-stlye="{
+            'background-image': 'url(https://walter.trakt.us/images/shows/000/001/390/fanarts/medium/39f9936d62.jpg)'
+          }"
+          md-colspan-gt-sm="{{tile.colspan}}"
+          md-colspan-gt-sm="{{tile.rowspan}}">
+        </md-grid-tile>
+      </md-grid-list>
+    </md-content>
+  </div>
+</div>
