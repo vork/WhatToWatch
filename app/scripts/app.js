@@ -18,6 +18,7 @@ angular
     'ngTouch',
     'ngMaterial'
   ])
+  //Fetch trending tv shows from trakt
   .factory('TrendingShows', function($resource) {
     return $resource(
       'https://api-v2launch.trakt.tv/shows/trending',
@@ -28,7 +29,7 @@ angular
           isArray:true,
           params: {
             'extended':'images',
-            'limit': 13
+            'limit': 20
           },
           headers: {
             'Content-type':'application/json',
@@ -39,6 +40,7 @@ angular
       }
     );
   })
+  //Fetch previously watched show for a user from trakt.tv
   .factory('WatchedShows', function($resource) {
     return $resource(
       'https://api-v2launch.trakt.tv/users/:user/watched/shows',
@@ -59,10 +61,12 @@ angular
       }
     );
   })
+  //Fetch details about a season for a tv shows.
+  //These details contain a list of episodes
   .factory('SeasonDetails', function($resource) {
     return $resource(
       'https://api-v2launch.trakt.tv/shows/:id/seasons',
-      {show:'@show'},
+      {id:'@id'},
       {
         query: {
           method:'GET',
@@ -79,14 +83,16 @@ angular
       }
     );
   })
+  //Fetch details about a tv shows
+  //These details contain a description of the plot and images
   .factory('ShowDetails', function($resource) {
     return $resource(
       'https://api-v2launch.trakt.tv/shows/:id',
-      {show:'@show'},
+      {id:'@id'},
       {
         query: {
           method:'GET',
-          isArray:true,
+          isArray:false,
           params: {
             'extended':'full,images'
           },
@@ -99,16 +105,38 @@ angular
       }
     );
   })
+  //A service which can save possible other episodes if the user
+  //is unhappy with the current choice
+  .factory('provideNextService', function() {
+    var possibleOtherEpisodes = {};
+    function set(data) {
+      possibleOtherEpisodes = data;
+    }
+    function get() {
+      return possibleOtherEpisodes;
+    }
 
+    return {
+      set: set,
+      get: get
+    }
+  })
+  //Configure the routes
   .config(function ($routeProvider) {
     $routeProvider
       .when('/', {
         templateUrl: 'views/start.html',
         controller: 'StartCtrl'
       })
-      .when('/about', {
-        templateUrl: 'views/about.html',
-        controller: 'AboutCtrl'
+      //Display detail information about a tv show.
+      //If the optional parameters season or episodes (int) are set,
+      //information about a episode is shown.
+      //If the optional parameter enableNext (bool) is set, then
+      //a display next arrow is shown and the view can request another
+      //show from a global service
+      .when('/detail/:showId/:season?/:episode?/:enableNext?', {
+        templateUrl: 'views/detail.html',
+        controller: 'DetailCtrl'
       })
       .otherwise({
         redirectTo: '/'

@@ -1,0 +1,34 @@
+<div ng-controller="DetailCtrl as detailCtrl">
+  <header md-page-header>
+    <div md-header-picture style="
+    background-image:url({{detailCtrl.tvshow.image}})"></div>
+    <md-toolbar scroll>
+      <div class="md-toolbar-tools">
+        <md-button class="md-tools" aria-label="Go Back">
+          <i class="ion-android-arrow-back"></i>
+        </md-button>
+        <h2 md-header-title flex>{{detailCtrl.tvshow.name}}</h2>
+        <span flex></span>
+        <md-button href="https://github.com/vork/WhatToWatch"
+                  title="Fork me on Github"
+                  class="md-icon-button"
+                  aria-label="Github">
+          <md-icon md-svg-icon="images/Github-Mark.svg" style="color: white;"></md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+  </header>
+  <br /><br />
+  <section id="page-section">
+    <md-content>
+      <md-whiteframe class="md-whiteframe-z2"
+                    layout-margin layout-padding
+                    layout-fill
+                    layout-align="center center">
+        <p>{{detailCtrl.tvshow.name}}</p>
+        <p>{{detailCtrl.tvshow.description}}</p>
+        <img src="{{detailCtrl.tvshow.poster}}" style="height: 100px; width: 100px;"/>
+      </md-whiteframe>
+    </md-content>
+  </section>
+</div>

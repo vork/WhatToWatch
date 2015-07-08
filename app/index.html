@@ -18,21 +18,6 @@
   <body ng-app="projectApp">
 
     <!-- Add your site or application content here -->
-    <md-toolbar>
-      <div class="md-toolbar-tools">
-        <h2>
-          <span>What to watch</span>
-        </h2>
-        <span flex></span>
-        <md-button href="https://github.com/vork/WhatToWatch"
-                    title="Fork me on Github"
-                    class="md-icon-button"
-                    aria-label="Github">
-          <md-icon md-svg-icon="images/Github-Mark.svg" style="color: white;"></md-icon>
-        </md-button>
-      </div>
-    </md-toolbar>
-
     <div class="container" layout-fill>
       <div ng-view="" layout-fill></div>
     </div>
@@ -54,7 +39,7 @@
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
         <script src="scripts/controllers/start.js"></script>
-        <script src="scripts/controllers/about.js"></script>
+        <script src="scripts/controllers/detail.js"></script>
         <!-- endbuild -->
 </body>
 </html>
