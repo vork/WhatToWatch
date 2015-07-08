@@ -1,4 +1,4 @@
-<div layout="column" layout-fill ng-controller="MainCtrl as mainCtrl">
+<div layout="column" layout-fill ng-controller="StartCtrl as startCtrl">
   <div flex>
     <md-content md-theme="docs-dark" layout-padding
   layout="row" layout-sm="column">
@@ -20,7 +20,7 @@
         md-gutter-gt-md="16px" md-gutter-gt-sm="8px"
         md-gutter="4px">
         <md-grid-tile
-          ng-repeat="show in mainCtrl.shows"
+          ng-repeat="show in startCtrl.shows"
           md-colspan-gt-sm="{{show.colspan}}"
           md-rowspan-gt-sm="{{show.rowspan}}">
           <div style="background-image: url({{show.image}});
