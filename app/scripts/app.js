@@ -27,7 +27,8 @@ angular
           method:'GET',
           isArray:true,
           params: {
-            'extended':'images'
+            'extended':'images',
+            'limit': 13
           },
           headers: {
             'Content-type':'application/json',
