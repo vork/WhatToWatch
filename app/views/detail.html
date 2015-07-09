@@ -26,27 +26,30 @@
   <section id="page-section">
     <md-content layout-padding layout-margin>
       <md-grid-list
-          md-cols-sm="4" md-cols-md="6" md-cols-gt-md="9"
-          md-row-height="4:3"
-          md-gutter="16px" md-gutter-gt-sm="8px">
+          md-cols-sm="4" md-cols-md="6" md-cols="7"
+          md-row-height="4:2" md-row-height-sm="3:2"
+          md-gutter="16px"
+          style="margin-right:32px;">
         <md-grid-tile
-            md-rowspan="3"
+            md-rowspan="4"
             md-colspan="2">
           <div style="
-          background-image:url({{detailCtrl.tvshow.poster}});
-          height: 100%; width: 100%;
-          background-size: contain;
-          background-repeat: no-repeat;
-          background-position: center center;"></div>
+            background-image:url({{detailCtrl.tvshow.poster}});
+            height: 100%; width: 100%;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center center;"></div>
         </md-grid-tile>
         <md-grid-tile
                md-rowspan="1"
-               md-colspan="2">
-          <span flex><h1>{{detailCtrl.tvshow.name}} ({{detailCtrl.tvshow.year}})</h1></span>
+               md-colspan="2" md-colspan-gt-md="5"
+               layout-align="start center"
+               style="text-align: left;">
+          <h1>{{detailCtrl.tvshow.name}} ({{detailCtrl.tvshow.year}})</h1>
         </md-grid-tile>
         <md-grid-tile
              md-rowspan="1"
-             md-colspan="2">
+             md-colspan="2" md-colspan-gt-md="5">
           <div layout="row" layout-align="start center" layout-fill
                             layout-wrap>
             <i id="star1" class="ion-android-star-outline"></i>
@@ -60,6 +63,26 @@
             <i id="star9" class="ion-android-star-outline"></i>
             <i id="star10" class="ion-android-star-outline"></i>
           </div>
+        </md-grid-tile>
+        <md-grid-tile
+            md-rowspan="1"
+            md-colspan="1">
+          <h3>{{detailCtrl.tvshow.episodes}} &nbsp</h3><p>episodes</p>
+        </md-grid-tile>
+        <md-grid-tile
+            md-rowspan="1"
+            md-colspan="1">
+          <h3>{{detailCtrl.tvshow.runtime}} &nbsp</h3><p>min</p>
+        </md-grid-tile>
+        <md-grid-tile
+            md-rowspan="1"
+            md-colspan="2">
+          <p>Airing on</p><h3>&nbsp {{detailCtrl.tvshow.network}}</h3>
+        </md-grid-tile>
+        <md-grid-tile
+            md-rowspan="2"
+            md-colspan="4" md-colspan-gt-md="5">
+          <p class="center">{{detailCtrl.tvshow.description}}</p>
         </md-grid-tile>
       </md-grid-list>
     </md-content>
