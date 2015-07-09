@@ -27,11 +27,23 @@ angular.module('projectApp')
         console.log(show);
 
         _this.tvshow = ({
-          image: show.images.fanart.full, //TODO maybe replace with medium
+          image: show.images.fanart.full,
           name: show.title,
           description: show.overview,
-          poster: show.images.poster.medium,
+          rating: show.rating,
+          network: show.network,
+          genres: show.genres,
+          episodes: show.aired_episodes,
+          runtime: show.runtime,
+          year: show.year,
+          poster: show.images.poster.medium
         });
+        for(var i = 1; i <= _this.tvshow.rating; i++) {
+          var elementId = "#star" + i;
+          var star = angular.element(document.querySelector(elementId));
+          star.removeClass('ion-android-star-outline');
+          star.addClass('ion-android-star');
+        }
       },
       function(error) {
         alert("Something went wrong");

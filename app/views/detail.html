@@ -24,15 +24,44 @@
   </header>
   <br /><br />
   <section id="page-section">
-    <md-content>
-      <md-whiteframe class="md-whiteframe-z2"
-                    layout-margin layout-padding
-                    layout-fill
-                    layout-align="center center">
-        <p>{{detailCtrl.tvshow.name}}</p>
-        <p>{{detailCtrl.tvshow.description}}</p>
-        <img src="{{detailCtrl.tvshow.poster}}" style="height: 100px; width: 100px;"/>
-      </md-whiteframe>
+    <md-content layout-padding layout-margin>
+      <md-grid-list
+          md-cols-sm="4" md-cols-md="6" md-cols-gt-md="9"
+          md-row-height="4:3"
+          md-gutter="16px" md-gutter-gt-sm="8px">
+        <md-grid-tile
+            md-rowspan="3"
+            md-colspan="2">
+          <div style="
+          background-image:url({{detailCtrl.tvshow.poster}});
+          height: 100%; width: 100%;
+          background-size: contain;
+          background-repeat: no-repeat;
+          background-position: center center;"></div>
+        </md-grid-tile>
+        <md-grid-tile
+               md-rowspan="1"
+               md-colspan="2">
+          <span flex><h1>{{detailCtrl.tvshow.name}} ({{detailCtrl.tvshow.year}})</h1></span>
+        </md-grid-tile>
+        <md-grid-tile
+             md-rowspan="1"
+             md-colspan="2">
+          <div layout="row" layout-align="start center" layout-fill
+                            layout-wrap>
+            <i id="star1" class="ion-android-star-outline"></i>
+            <i id="star2" class="ion-android-star-outline"></i>
+            <i id="star3" class="ion-android-star-outline"></i>
+            <i id="star4" class="ion-android-star-outline"></i>
+            <i id="star5" class="ion-android-star-outline"></i>
+            <i id="star6" class="ion-android-star-outline"></i>
+            <i id="star7" class="ion-android-star-outline"></i>
+            <i id="star8" class="ion-android-star-outline"></i>
+            <i id="star9" class="ion-android-star-outline"></i>
+            <i id="star10" class="ion-android-star-outline"></i>
+          </div>
+        </md-grid-tile>
+      </md-grid-list>
     </md-content>
   </section>
 </div>
