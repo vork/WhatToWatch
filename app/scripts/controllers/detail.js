@@ -49,33 +49,37 @@ angular.module('projectApp')
         alert("Something went wrong");
       }
     );
-    //TODO switch between episode and tv show mode
-    _this.seasons = [];
-    SeasonImages.query({
-      id:_this.showId
-    }).$promise.then(
-      function(seasons) {
-        console.log("processing season rest request");
-        console.log(seasons);
+    if(typeof _this.episode === "undefined") {
+      _this.showEpisodeInfo = false;
+      _this.seasons = [];
+      SeasonImages.query({
+        id:_this.showId
+      }).$promise.then(
+        function(seasons) {
+          console.log("processing season rest request");
+          console.log(seasons);
 
-        for(var i = 0; i < seasons.length; i++) {
-          var season = seasons[i];
-          var title;
-          if(season.number == 0) {
-            title = 'Specials';
-          } else {
-            title = 'Season ' + season.number;
+          for(var i = 0; i < seasons.length; i++) {
+            var season = seasons[i];
+            var title;
+            if(season.number == 0) {
+              title = 'Specials';
+            } else {
+              title = 'Season ' + season.number;
+            }
+            _this.seasons.push({
+              season: title,
+              image: season.images.poster.medium
+            });
           }
-          _this.seasons.push({
-            season: title,
-            image: season.images.poster.medium
-          });
+        },
+        function(error) {
+          alert("Something went wrong while fetching the seasons");
         }
-      },
-      function(error) {
-        alert("Something went wrong while fetching the seasons");
-      }
-    );
+      );
+    } else {
+      _this.showEpisodeInfo = true;
+    }
   })
   .directive("scroll", function($window) {
     return function(scope, element, attrs) {
