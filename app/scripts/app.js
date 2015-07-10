@@ -83,6 +83,52 @@ angular
       }
     );
   })
+  //Fetch all season images
+  .factory('SeasonImages', function($resource) {
+    return $resource(
+      'https://api-v2launch.trakt.tv/shows/:id/seasons',
+      {id:'@id'},
+      {
+        query: {
+          method:'GET',
+          isArray:true,
+          params: {
+            'extended':'images'
+          },
+          headers: {
+            'Content-type':'application/json',
+            'trakt-api-version':'2',
+            'trakt-api-key':'0c0a20790918c78c3a72c05da18de725509d9c4a428ad7dc0c4a523b7e33815c'
+          }
+        }
+      }
+    );
+  })
+  //Fetch details like a description and a image of a episode
+  .factory('EpisodeDetails', function($resource) {
+    return $resource(
+      'https://api-v2launch.trakt.tv/shows/:id/seasons/:season/episodes/:episode',
+      {
+        id:'@id',
+        season:'@season',
+        episode:'@episode'
+      },
+      {
+        query: {
+          method:'GET',
+          isArray:true,
+          params: {
+            'extended':'full,images'
+          },
+          headers: {
+            'Content-type':'application/json',
+            'trakt-api-version':'2',
+            'trakt-api-key':'0c0a20790918c78c3a72c05da18de725509d9c4a428ad7dc0c4a523b7e33815c'
+          }
+        }
+      }
+    );
+  })
   //Fetch details about a tv shows
   //These details contain a description of the plot and images
   .factory('ShowDetails', function($resource) {
