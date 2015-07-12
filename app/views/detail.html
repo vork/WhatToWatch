@@ -1,23 +1,26 @@
 <div ng-controller="DetailCtrl as detailCtrl">
   <header md-page-header>
-    <div md-header-picture style="
-    background-image:url({{detailCtrl.tvshow.image}})"></div>
+    <div md-header-picture 
+      ng-hide="{{detailCtrl.showEpisodeInfo}}" style="
+        background-image:url({{detailCtrl.tvshow.image}})"></div>
+    <div md-header-picture
+      ng-show="{{detailCtrl.showEpisodeInfo}}" style="
+        background-image:url({{detailCtrl.ep.image}})"></div>
     <md-toolbar scroll>
       <div class="md-toolbar-tools">
-        <md-button 
+        <md-button
           href="#/"
           class="md-tools" aria-label="Go Back">
           <i class="ion-android-arrow-back"></i>
         </md-button>
         <h2 md-header-title flex>{{detailCtrl.tvshow.name}}</h2>
         <span flex></span>
-        <md-button 
+        <md-button
           href="https://github.com/vork/WhatToWatch"
           class="md-tools"
           title="Fork me on Github"
           aria-label="Github">
           <i class="ion-social-github"></i>
-        </md-button>
         </md-button>
       </div>
     </md-toolbar>
@@ -25,68 +28,42 @@
   <br /><br />
   <section id="page-section">
     <md-content layout-padding layout-margin>
-      <md-grid-list
-          md-cols-sm="4" md-cols-md="6" md-cols="7"
-          md-row-height="4:2" md-row-height-sm="3:2"
-          md-gutter="16px"
-          style="margin-right:32px;">
-        <md-grid-tile
-            md-rowspan="4"
-            md-colspan="2">
-          <div style="
-            background-image:url({{detailCtrl.tvshow.poster}});
-            height: 100%; width: 100%;
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center center;"></div>
-        </md-grid-tile>
-        <md-grid-tile
-               md-rowspan="1"
-               md-colspan="2" md-colspan-gt-md="5"
-               layout-align="start start"
-               style="text-align: left;">
-          <h1>{{detailCtrl.tvshow.name}} ({{detailCtrl.tvshow.year}})</h1>
-        </md-grid-tile>
-        <md-grid-tile
-               layout-align="center center"
-             md-rowspan="1"
-             md-colspan="2" md-colspan-gt-md="5" md-colspan-sm="4">
-          <div layout="row" layout-align="start center" layout-fill
-                            layout-wrap>
-            <i id="star1" class="ion-android-star-outline"></i>
-            <i id="star2" class="ion-android-star-outline"></i>
-            <i id="star3" class="ion-android-star-outline"></i>
-            <i id="star4" class="ion-android-star-outline"></i>
-            <i id="star5" class="ion-android-star-outline"></i>
-            <i id="star6" class="ion-android-star-outline"></i>
-            <i id="star7" class="ion-android-star-outline"></i>
-            <i id="star8" class="ion-android-star-outline"></i>
-            <i id="star9" class="ion-android-star-outline"></i>
-            <i id="star10" class="ion-android-star-outline"></i>
+      <div layout="row" layout-sm="column" layout-align-sm="start center" layout-align="start start" layout-wrap layout-padding layout-margin>
+        <div flex="33" flex-sm="66">
+          <img src="{{detailCtrl.tvshow.poster}}" style="width: 100%;" />
+        </div>
+        <div layout="column">
+          <div flex="66" flex-sm="80"
+                       ng-hide="{{detailCtrl.episode.title}}">
+            <h1>{{detailCtrl.tvshow.name}}</h1>
+            <p>{{detailCtrl.tvshow.year}} - {{detailCtrl.tvshow.network}} - {{detailCtrl.tvshow.runtime}} min - {{detailCtrl.tvshow.episodes}} episodes</p>
           </div>
-        </md-grid-tile>
-        <md-grid-tile
-            md-rowspan="1"
-            md-colspan="1" md-colspan-sm="2">
-          <h3>{{detailCtrl.tvshow.episodes}} &nbsp</h3><p>episodes</p>
-        </md-grid-tile>
-        <md-grid-tile
-            md-rowspan="1"
-            md-colspan="1" md-colspan-sm="2"
-            layout-align="start center">
-          <h3>{{detailCtrl.tvshow.runtime}} &nbsp</h3><p>min</p>
-        </md-grid-tile>
-        <md-grid-tile
-            md-rowspan="1"
-            md-colspan="2">
-          <p>Airing on</p><h3>&nbsp {{detailCtrl.tvshow.network}}</h3>
-        </md-grid-tile>
-        <md-grid-tile
-            md-rowspan="3" md-rowspan-gt-md="2"
-            md-colspan="4" md-colspan-gt-md="7">
-          <p class="center">{{detailCtrl.tvshow.description}}</p>
-        </md-grid-tile>
-      </md-grid-list>
+          <div flex="66" flex-sm="80"
+                       ng-show="{{detailCtrl.showEpisodeInfo}}">
+            <h1>{{detailCtrl.episode.title}}</h1>
+            <p>S{{detailCtrl.season}}E{{detailCtrl.episode}} - {{detailCtrl.tvshow.runtime}} min - {{detailCtrl.tvshow.network}}</p>
+          </div>
+          <div flex="80" layout-align="start center">
+            <h4>Bewertung:</h4>
+            <div layout="row" flex>
+              <i id="star1" class="ion-android-star-outline"></i>
+              <i id="star2" class="ion-android-star-outline"></i>
+              <i id="star3" class="ion-android-star-outline"></i>
+              <i id="star4" class="ion-android-star-outline"></i>
+              <i id="star5" class="ion-android-star-outline"></i>
+              <i id="star6" class="ion-android-star-outline"></i>
+              <i id="star7" class="ion-android-star-outline"></i>
+              <i id="star8" class="ion-android-star-outline"></i>
+              <i id="star9" class="ion-android-star-outline"></i>
+              <i id="star10" class="ion-android-star-outline"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div flex>
+        <p class="center" ng-hide="{{detailCtrl.showEpisodeInfo}}">{{detailCtrl.tvshow.description}}</p>
+        <p class="center" ng-show="{{detailCtrl.showEpisodeInfo}}">{{detailCtrl.ep.description}}</p>
+      </div>
       <div id="seasons"
            ng-hide="{{detailCtrl.showEpisodeInfo}}">
         <h2>Seasons:</h2>

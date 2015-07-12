@@ -17,8 +17,11 @@ angular.module('projectApp')
     _this.episode = $routeParams.episode;
     _this.enableNext = $routeParams.enableNext;
 
-    //TODO: check if season, episode and enablenext is checked
-
+    if(typeof _this.episode === "undefined") {
+      _this.showEpisodeInfo = false;
+    } else {
+      _this.showEpisodeInfo = true;
+    }
     ShowDetails.query({
       id:_this.showId
     }).$promise.then(
@@ -38,19 +41,47 @@ angular.module('projectApp')
           year: show.year,
           poster: show.images.poster.medium
         });
-        for(var i = 1; i <= _this.tvshow.rating; i++) {
-          var elementId = "#star" + i;
-          var star = angular.element(document.querySelector(elementId));
-          star.removeClass('ion-android-star-outline');
-          star.addClass('ion-android-star');
+        //Only set the rating for the tv show, if we're displaying a tv show
+        if(!_this.showEpisodeInfo) {
+          for(var i = 1; i <= _this.tvshow.rating; i++) {
+            var elementId = "#star" + i;
+            var star = angular.element(document.querySelector(elementId));
+            star.removeClass('ion-android-star-outline');
+            star.addClass('ion-android-star');
+          }
         }
       },
       function(error) {
         alert("Something went wrong");
       }
     );
-    if(typeof _this.episode === "undefined") {
-      _this.showEpisodeInfo = false;
+
+    if(_this.showEpisodeInfo) {
+      EpisodeDetails.query({
+        id:_this.showId,
+        season: _this.season,
+        episode: _this.episode
+      }).$promise.then(
+        function(episode) {
+          console.log("processing episode rest request");
+          console.log(episode);
+
+          _this.ep = {
+            title: episode.title,
+            description: episode.overview,
+            rating: episode.rating,
+            image: episode.screenshot.full
+          }
+
+          for(var i = 1; i <= episode.rating; i++) {
+            var elementId = "#star" + i;
+            var star = angular.element(document.querySelector(elementId));
+            star.removeClass('ion-android-star-outline');
+            star.addClass('ion-android-star');
+          }
+        }
+      );
+    } else {
       _this.seasons = [];
       SeasonImages.query({
         id:_this.showId
@@ -77,8 +108,6 @@ angular.module('projectApp')
           alert("Something went wrong while fetching the seasons");
         }
       );
-    } else {
-      _this.showEpisodeInfo = true;
     }
   })
   .directive("scroll", function($window) {
