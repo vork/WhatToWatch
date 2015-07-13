@@ -8,7 +8,7 @@
  * Controller of the projectApp
  */
 angular.module('projectApp')
-  .controller('DetailCtrl', function ($scope, $routeParams, ShowDetails, SeasonImages, EpisodeDetails) {
+  .controller('DetailCtrl', function ($scope, $routeParams, $location, ShowDetails, SeasonImages, ProvideNextService, EpisodeDetails) {
     var _this = this;
 
     //get the parameter for the current detail screen
@@ -56,6 +56,33 @@ angular.module('projectApp')
       }
     );
 
+    if(typeof _this.enableNext === 'undefined') {
+      _this.enableNext = false;
+    }
+
+    //TODO check if the potentialNext stuff is REALLY set
+    var potentialNext = ProvideNextService.get();
+    if(typeof potentialNext === 'undefined') {
+      _this.enableNext = false;
+    }
+
+    $scope.showNext = function() {
+      var toWrite = potentialNext.slice(1,potentialNext.length); //remove the first index and write it
+      ProvideNextService.set(toWrite);
+      var enableNext = 0;
+      if(toWrite.length > 1) {
+        enableNext = 1;
+      }
+      $location.path('/detail/' + potentialNext[0].showId +
+                      '/' + potentialNext[0].season +
+                      '/' + potentialNext[0].episode +
+                      '/' + enableNext);
+
+    };
+    $scope.go = function(showId) {
+      $location.path('/detail/' + showId);
+    };
+
     if(_this.showEpisodeInfo) {
       EpisodeDetails.query({
         id:_this.showId,
@@ -70,7 +97,7 @@ angular.module('projectApp')
             title: episode.title,
             description: episode.overview,
             rating: episode.rating,
-            image: episode.screenshot.full
+            image: episode.images.screenshot.full
           }
 
           for(var i = 1; i <= episode.rating; i++) {

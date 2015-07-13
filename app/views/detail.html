@@ -22,6 +22,14 @@
           aria-label="Github">
           <i class="ion-social-github"></i>
         </md-button>
+        <md-button
+             ng-click="showNext()"
+             class="md-tools"
+             title="Show next episode"
+             aria-label="Next episode"
+             ng-show="{{detailCtrl.enableNext}}">
+          <i class="ion-android-arrow-forward"></i>
+        </md-button>
       </div>
     </md-toolbar>
   </header>
@@ -34,13 +42,13 @@
         </div>
         <div layout="column">
           <div flex="66" flex-sm="80"
-                       ng-hide="{{detailCtrl.episode.title}}">
+                       ng-hide="{{detailCtrl.showEpisodeInfo}}">
             <h1>{{detailCtrl.tvshow.name}}</h1>
             <p>{{detailCtrl.tvshow.year}} - {{detailCtrl.tvshow.network}} - {{detailCtrl.tvshow.runtime}} min - {{detailCtrl.tvshow.episodes}} episodes</p>
           </div>
           <div flex="66" flex-sm="80"
                        ng-show="{{detailCtrl.showEpisodeInfo}}">
-            <h1>{{detailCtrl.episode.title}}</h1>
+            <h1>{{detailCtrl.ep.title}}</h1>
             <p>S{{detailCtrl.season}}E{{detailCtrl.episode}} - {{detailCtrl.tvshow.runtime}} min - {{detailCtrl.tvshow.network}}</p>
           </div>
           <div flex="80" layout-align="start center">
@@ -83,10 +91,10 @@
           </md-grid-tile>
         </md-grid-list>
       <div>
-      <div id="episode"
-           ng-show="{{detailCtrl.showEpisodeInfo}}>
+      <!--div id="episode"
+           ng-show="{{detailCtrl.showEpisodeInfo}}">
         <h2>Episode:</h2>
-      </div>
+      </div-->
     </md-content>
   </section>
 </div>

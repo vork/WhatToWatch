@@ -72,7 +72,7 @@ angular
           method:'GET',
           isArray:true,
           params: {
-            'extended':'full,episodes'
+            'extended':'full,images'
           },
           headers: {
             'Content-type':'application/json',
@@ -116,7 +116,7 @@ angular
       {
         query: {
           method:'GET',
-          isArray:true,
+          isArray:false,
           params: {
             'extended':'full,images'
           },
@@ -153,7 +153,7 @@ angular
   })
   //A service which can save possible other episodes if the user
   //is unhappy with the current choice
-  .factory('provideNextService', function() {
+  .factory('ProvideNextService', function() {
     var possibleOtherEpisodes = {};
     function set(data) {
       possibleOtherEpisodes = data;

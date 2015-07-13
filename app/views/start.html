@@ -19,9 +19,10 @@
   layout="row" layout-sm="column">
       <md-input-container flex>
         <label>Username</label>
-        <input > <!-- TODO: add ng-model -->
+        <input type="text" ng-model="account" > <!-- TODO: add ng-model -->
       </md-input-container>
-      <md-button class="md-raised md-primary" flex="33">Find series to watch</md-button>
+      <md-button class="md-raised md-primary" flex="33" flex-sm="66" 
+        ng-click="findEpisodes(account)">Find series to watch</md-button>
     </md-content>
   </div>
 

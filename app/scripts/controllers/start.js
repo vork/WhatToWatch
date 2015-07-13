@@ -8,7 +8,7 @@
  * Controller of the projectApp
  */
 angular.module('projectApp')
-  .controller('StartCtrl', function ($scope, $location, TrendingShows) {
+  .controller('StartCtrl', function ($scope, $location, $q, TrendingShows, WatchedShows, SeasonDetails, ProvideNextService) {
     var _this = this;
     _this.shows = [];
 
@@ -57,6 +57,124 @@ angular.module('projectApp')
     $scope.go = function(showId) {
       $location.path('/detail/' + showId);
     };
+
+    $scope.findEpisodes = function(account) {
+      //Watched progress endpoint requires oauth.
+      //Logging in wasn't intended so this is a "hack" around it
+      WatchedShows.query({
+        user: account
+      }).$promise.then(
+        function(watched) {
+          var len = watched.length;
+          var potentialEpisodes = [];
+          if(len > 15) { //limit to 15 tv shows
+            len = 15;
+          }
+
+          var fetchRequest = [];
+          //Add the requests for the first 15 shows
+          for(var i = 0; i < len; i++) {
+            fetchRequest.push(fetchShows(watched[i].show.ids.trakt));
+          }
+          $q.all(fetchRequest).then(
+            function(data) {
+              for(var i = 0; i < data.length; i++) {
+                var curShow = watched[i].show;
+                var watchedSeasons = watched[i].seasons;
+
+                var airedSeasons = data[i];
+
+                var nextEpisode = {
+                  season: -1,
+                  episode: -1
+                };
+
+                var countAiredSeasons = airedSeasons.length;
+                var countWatchedSeasons = watchedSeasons.length;
+                for(var j = 0; j < countAiredSeasons; j++) { //Go through all aired seasons
+                  if(airedSeasons[j].number > 0) { //0 is reserved for specials. Skip specials.
+                    var countAiredEpisodes = airedSeasons[j].episode_count; //Get the count of aired episodes for this season
+
+                    for(var k = 0; k < countWatchedSeasons; k++) { //go through all watched seasons...
+                      if(watchedSeasons[k].number == airedSeasons[j].number) { //... and find the current selected
+                        var countWatchedEpisodes = watchedSeasons[k].episodes.length;
+                        if(countWatchedEpisodes !== countAiredEpisodes) { //If the user hasn't watched everything...
+                          nextEpisode = { //... set the next episode for now
+                            season: airedSeasons[j].number,
+                            episode: countWatchedEpisodes + 1
+                          };
+                        }
+                      }
+                    }
+                  }
+                }
+                if(nextEpisode.season !== -1 && nextEpisode.episode !== -1) { //A next episode was found in a previously started season
+                  potentialEpisodes.push({
+                    showId: curShow.ids.trakt,
+                    season: nextEpisode.season,
+                    episode: nextEpisode.episode
+                  });
+                } else { //The user has finished the last watched season
+                  var watchedContainsSpecial, airedContainsSpecial;
+                  watchedContainsSpecial = watchedSeasons[0].number == '0';
+                  airedContainsSpecial = airedSeasons[0].number == '0';
+
+                  var watchedCount = watchedSeasons.length;
+                  var airedCount = airedSeasons.length;
+
+                  if(watchedContainsSpecial) {
+                    watchedCount--;
+                  }
+                  if(airedContainsSpecial) {
+                    airedCount--;
+                  }
+
+                  if(watchedCount < airedCount) { //check if there is a season left
+                    var lastWatchedSeason = watchedSeasons[watchedSeasons.length - 1].number;
+                    var lastAiredSeason = airedSeasons[airedSeasons.length - 1].number;
+                    if(lastWatchedSeason < lastAiredSeason) {
+                      potentialEpisodes.push({
+                        showId: curShow.ids.trakt,
+                        season: lastWatchedSeason + 1,
+                        episode: 1
+                      });
+                    }
+                  }
+                }
+              }
+              console.log(potentialEpisodes);
+              if(potentialEpisodes.length == 0) {
+                alert("No potential episode to watch found"); //TODO handle this more gracefully
+              } else {
+                var enableNext = 0;
+                if(potentialEpisodes.length > 1) {
+                  enableNext = 1;
+                }
+                var toWrite = potentialEpisodes.slice(1, potentialEpisodes.length); //remove the first index and write it
+                ProvideNextService.set(toWrite);
+                $location.path('/detail/' + potentialEpisodes[0].showId +
+                                    '/' + potentialEpisodes[0].season +
+                                    '/' + potentialEpisodes[0].episode +
+                                    '/' + enableNext);
+
+              }
+            }
+          )
+        }
+      );
+    }
+
+    function fetchShows(showID) {
+      var d = $q.defer();
+      var result = SeasonDetails.query({
+              id: showID
+            },
+            function() {
+              d.resolve(result);
+            }
+      );
+      return d.promise;
+    }
   })
   .config( function($mdThemingProvider) {
     $mdThemingProvider.theme('docs-dark', 'default')
