@@ -8,14 +8,14 @@
  * Controller of the projectApp
  */
 angular.module('projectApp')
-  .controller('DetailCtrl', function ($scope, $routeParams, $location, ShowDetails, SeasonImages, ProvideNextService, EpisodeDetails) {
+  .controller('DetailCtrl', function ($scope, $routeParams, $location, ShowDetails, SeasonImages, EpisodeDetails) {
     var _this = this;
 
     //get the parameter for the current detail screen
     _this.showId = $routeParams.showId;
     _this.season = $routeParams.season;
     _this.episode = $routeParams.episode;
-    _this.enableNext = $routeParams.enableNext;
+    _this.next = $routeParams.enableNext;
 
     if(typeof _this.episode === "undefined") {
       _this.showEpisodeInfo = false;
@@ -56,28 +56,40 @@ angular.module('projectApp')
       }
     );
 
-    if(typeof _this.enableNext === 'undefined') {
+    if(typeof _this.next === 'undefined') {
       _this.enableNext = false;
-    }
-
-    //TODO check if the potentialNext stuff is REALLY set
-    var potentialNext = ProvideNextService.get();
-    if(typeof potentialNext === 'undefined') {
-      _this.enableNext = false;
+    } else {
+      _this.enableNext = true;
     }
 
     $scope.showNext = function() {
-      var toWrite = potentialNext.slice(1,potentialNext.length); //remove the first index and write it
-      ProvideNextService.set(toWrite);
-      var enableNext = 0;
-      if(toWrite.length > 1) {
-        enableNext = 1;
+      var toSplit = atob($routeParams.enableNext);
+      var ids = toSplit.split(";;;");
+      var potentialNext = [];
+      for(var s = 0; s < ids.length; s++) {
+        var splitted = ids[s].split(";_");
+        potentialNext.push({
+          showId: splitted[0],
+          season: splitted[1],
+          episode: splitted[2]
+        });
       }
+      var toWrite = potentialNext.slice(1,potentialNext.length); //remove the first index and write it
+
+      if(toWrite.length > 0) {
+        var toRet = "";
+        for(var s = 0; s < toWrite.length; s++) {
+          if(s != 0) {
+            toRet = toRet + ';;;';
+          }
+          toRet = toRet + toWrite[s].showId.toString() + ';_' + toWrite[s].season + ';_' + toWrite[s].episode;
+        }
+      }
+      toRet = btoa(toRet);
       $location.path('/detail/' + potentialNext[0].showId +
                       '/' + potentialNext[0].season +
                       '/' + potentialNext[0].episode +
-                      '/' + enableNext);
-
+                      '/' + toRet);
     };
     $scope.go = function(showId) {
       $location.path('/detail/' + showId);

@@ -8,7 +8,7 @@
  * Controller of the projectApp
  */
 angular.module('projectApp')
-  .controller('StartCtrl', function ($scope, $location, $q, TrendingShows, WatchedShows, SeasonDetails, ProvideNextService) {
+  .controller('StartCtrl', function ($scope, $location, $q, TrendingShows, WatchedShows, SeasonDetails) {
     var _this = this;
     _this.shows = [];
 
@@ -146,16 +146,21 @@ angular.module('projectApp')
               if(potentialEpisodes.length == 0) {
                 alert("No potential episode to watch found"); //TODO handle this more gracefully
               } else {
-                var enableNext = 0;
-                if(potentialEpisodes.length > 1) {
-                  enableNext = 1;
-                }
                 var toWrite = potentialEpisodes.slice(1, potentialEpisodes.length); //remove the first index and write it
-                ProvideNextService.set(toWrite);
+                if(toWrite.length > 0) {
+                  var toRet = "";
+                  for(var s = 0; s < toWrite.length; s++) {
+                    if(s != 0) {
+                      toRet = toRet + ';;;';
+                    }
+                    toRet = toRet + toWrite[s].showId.toString() + ';_' + toWrite[s].season + ';_' + toWrite[s].episode;
+                  }
+                }
+                toRet = btoa(toRet);
                 $location.path('/detail/' + potentialEpisodes[0].showId +
                                     '/' + potentialEpisodes[0].season +
                                     '/' + potentialEpisodes[0].episode +
-                                    '/' + enableNext);
+                                    '/' + toRet);
 
               }
             }
