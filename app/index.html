@@ -15,8 +15,19 @@
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
     <link href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" media="all" rel="stylesheet" type="text/css" />
+    <!-- bootstrap angular and cordova -->
+    <script>
+
+      document.addEventListener("deviceready", function() {
+          $scope.shake.startWatch();
+
+          // retrieve the DOM element that had the ng-app attribute
+          var domElement = document.getElementById('body') // document.querySelector(...);
+          angular.bootstrap(domElement, ["projectApp"]);
+      }, false);
+    </script>
   </head>
-  <body ng-app="projectApp">
+  <body>
 
     <!-- Add your site or application content here -->
     <div class="container" layout-fill>

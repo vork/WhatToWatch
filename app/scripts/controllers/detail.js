@@ -148,6 +148,61 @@ angular.module('projectApp')
         }
       );
     }
+
+    //Implement a shake feature in cordova
+    $scope.shake = (function () {
+      var shake = {},
+        id = null,
+        options = { freq: 300},
+        prevAccel = { x: null, y: null, z: null},
+        shakeCallback = null;
+
+      shake.startWatch = function() {
+        id = navigator.accelerometer.watchAcceleration(accessCurAccel, handleError, options);
+      };
+
+      shake.stopWatch = function() {
+        if(id != null) {
+          navigator.accelerometer.clearWatch(id);
+          id = null;
+        }
+      };
+
+      var assessCurAccel = function (acceleration) {
+        var accelChange = {};
+        if(prevAccel.x != null) {
+          if(_this.enableNext) {
+            accelChange.x = Math.abs(prevAccel.x - acceleration.x);
+            accelChange.y = Math.abs(prevAccel.y - acceleration.y);
+            accelChange.z = Math.abs(prevAccel.z - acceleration.z);
+
+            prevAccel = {
+              x: acceleration.x,
+              y: acceleration.y,
+              z: acceleration.z
+            };
+
+            if(accelChange.x + accelChange.y + accelChange.z > 25) {
+              $scope.showNext();
+            }
+
+            shake.stopWatch();
+            setTimeout(shake.startWatch, 1000);
+            prevAccel = {
+              x: null,
+              y: null,
+              z: null
+            }
+          }
+        }
+      };
+
+      function handleError() {
+        console.log("uhhh ohh. Shake error");
+      }
+
+      return shake;
+    })();
   })
   .directive("scroll", function($window) {
     return function(scope, element, attrs) {
