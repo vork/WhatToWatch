@@ -79,7 +79,7 @@ angular.module('projectApp')
       if(toWrite.length > 0) {
         var toRet = "";
         for(var s = 0; s < toWrite.length; s++) {
-          if(s != 0) {
+          if(s !== 0) {
             toRet = toRet + ';;;';
           }
           toRet = toRet + toWrite[s].showId.toString() + ';_' + toWrite[s].season + ';_' + toWrite[s].episode;
@@ -132,7 +132,7 @@ angular.module('projectApp')
           for(var i = 0; i < seasons.length; i++) {
             var season = seasons[i];
             var title;
-            if(season.number == 0) {
+            if(season.number === 0) {
               title = 'Specials';
             } else {
               title = 'Season ' + season.number;
@@ -144,48 +144,51 @@ angular.module('projectApp')
           }
         },
         function(error) {
-          alert("Something went wrong while fetching the seasons");
+          alert('Something went wrong while fetching the seasons');
         }
       );
     }
 
     //Implement a shake feature in cordova
-    $scope.shake = (function () {
+    _this.shake = (function () {
+
+      console.log(navigator);
       var shake = {},
         id = null,
-        options = { freq: 300},
-        prevAccel = { x: null, y: null, z: null},
-        shakeCallback = null;
+        options = { frequency: 300},
+        prevAccel = { x: null, y: null, z: null};
 
       shake.startWatch = function() {
-        id = navigator.accelerometer.watchAcceleration(accessCurAccel, handleError, options);
+        console.log('startWatch');
+        console.log('navigator is: ' + navigator);
+        console.log('accelerometer: ' + navigator.accelerometer);
+        id = navigator.accelerometer.watchAcceleration(getAccelSnapshot, handleError, options);
       };
 
       shake.stopWatch = function() {
-        if(id != null) {
+        console.log('stopWatch');
+        if(id !== null) {
           navigator.accelerometer.clearWatch(id);
           id = null;
         }
       };
 
-      var assessCurAccel = function (acceleration) {
+      function getAccelSnapshot() {
+        navigator.accelerometer.getCurrentAcceleration(accessCurAccel, handleError);
+      }
+
+      function accessCurAccel(acceleration) {
         var accelChange = {};
-        if(prevAccel.x != null) {
-          if(_this.enableNext) {
+        if(_this.enableNext) {
+          if(prevAccel.x !== null) {
             accelChange.x = Math.abs(prevAccel.x - acceleration.x);
             accelChange.y = Math.abs(prevAccel.y - acceleration.y);
             accelChange.z = Math.abs(prevAccel.z - acceleration.z);
+          }
 
-            prevAccel = {
-              x: acceleration.x,
-              y: acceleration.y,
-              z: acceleration.z
-            };
-
-            if(accelChange.x + accelChange.y + accelChange.z > 25) {
-              $scope.showNext();
-            }
-
+          if(accelChange.x + accelChange.y + accelChange.z > 25) {
+            console.log("Shake detected");
+            $scope.showNext();
             shake.stopWatch();
             setTimeout(shake.startWatch, 1000);
             prevAccel = {
@@ -193,9 +196,15 @@ angular.module('projectApp')
               y: null,
               z: null
             }
+          } else {
+            prevAccel = {
+              x: acceleration.x,
+              y: acceleration.y,
+              z: acceleration.z
+            }
           }
         }
-      };
+      }
 
       function handleError() {
         console.log("uhhh ohh. Shake error");
@@ -203,6 +212,11 @@ angular.module('projectApp')
 
       return shake;
     })();
+
+    $scope.init = function() {
+      _this.shake.startWatch();
+    };
+    //_this.shake.startWatch();
   })
   .directive("scroll", function($window) {
     return function(scope, element, attrs) {

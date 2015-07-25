@@ -2,7 +2,11 @@
 <html class="no-js">
   <head>
     <meta charset="utf-8">
-    <title></title>
+    <meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+    <title>What to watch</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
@@ -13,21 +17,11 @@
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/ionicons.css">
     <!-- endbuild -->
-    <link href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" media="all" rel="stylesheet" type="text/css" />
-    <!-- bootstrap angular and cordova -->
-    <script>
-
-      document.addEventListener("deviceready", function() {
-          $scope.shake.startWatch();
-
-          // retrieve the DOM element that had the ng-app attribute
-          var domElement = document.getElementById('body') // document.querySelector(...);
-          angular.bootstrap(domElement, ["projectApp"]);
-      }, false);
-    </script>
+    <link type="text/javascript" src="cordova.js"></script>
   </head>
-  <body>
+  <body ng-app="projectApp">
 
     <!-- Add your site or application content here -->
     <div class="container" layout-fill>
@@ -45,8 +39,6 @@
     <script src="bower_components/angular-touch/angular-touch.js"></script>
     <script src="bower_components/angular-aria/angular-aria.js"></script>
     <script src="bower_components/angular-material/angular-material.js"></script>
-    <script src="bower_components/ngstorage/ngStorage.js"></script>
-    <script src="bower_components/oauth-ng/dist/oauth-ng.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 

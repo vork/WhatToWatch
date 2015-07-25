@@ -19,7 +19,7 @@ angular.module('projectApp')
 
     TrendingShows.query().$promise.then(
       function( trending ) {
-        console.log("processing rest request");
+        console.log('processing rest request');
         $scope.isLoading = false;
 
         var maxWatchers = 0;
@@ -50,7 +50,7 @@ angular.module('projectApp')
         console.log(_this.shows);
       },
       function( error ) {
-        alert("Something went wrong");
+        alert('Something went wrong');
       }
     );
 
@@ -96,7 +96,7 @@ angular.module('projectApp')
                     var countAiredEpisodes = airedSeasons[j].episode_count; //Get the count of aired episodes for this season
 
                     for(var k = 0; k < countWatchedSeasons; k++) { //go through all watched seasons...
-                      if(watchedSeasons[k].number == airedSeasons[j].number) { //... and find the current selected
+                      if(watchedSeasons[k].number === airedSeasons[j].number) { //... and find the current selected
                         var countWatchedEpisodes = watchedSeasons[k].episodes.length;
                         if(countWatchedEpisodes !== countAiredEpisodes) { //If the user hasn't watched everything...
                           nextEpisode = { //... set the next episode for now
@@ -144,13 +144,13 @@ angular.module('projectApp')
               }
               console.log(potentialEpisodes);
               if(potentialEpisodes.length == 0) {
-                alert("No potential episode to watch found"); //TODO handle this more gracefully
+                alert('No potential episode to watch found'); //TODO handle this more gracefully
               } else {
                 var toWrite = potentialEpisodes.slice(1, potentialEpisodes.length); //remove the first index and write it
                 if(toWrite.length > 0) {
-                  var toRet = "";
+                  var toRet = '';
                   for(var s = 0; s < toWrite.length; s++) {
-                    if(s != 0) {
+                    if(s !== 0) {
                       toRet = toRet + ';;;';
                     }
                     toRet = toRet + toWrite[s].showId.toString() + ';_' + toWrite[s].season + ';_' + toWrite[s].episode;
