@@ -8,7 +8,7 @@
  * Controller of the projectApp
  */
 angular.module('projectApp')
-  .controller('DetailCtrl', function ($scope, $routeParams, $location, ShowDetails, SeasonImages, EpisodeDetails) {
+  .controller('DetailCtrl', function ($scope, $deviceMotion, $routeParams, $location, ShowDetails, SeasonImages, EpisodeDetails) {
     var _this = this;
 
     //get the parameter for the current detail screen
@@ -149,74 +149,57 @@ angular.module('projectApp')
       );
     }
 
-    //Implement a shake feature in cordova
-    _this.shake = (function () {
+    var watchID;
+    var prevAccel = { x: null, y: null, z: null, timestamp: 0};
 
-      console.log(navigator);
-      var shake = {},
-        id = null,
-        options = { frequency: 300},
-        prevAccel = { x: null, y: null, z: null};
+    this.watchAcceleration = function() {
+        var options = { frequency: 1000 };
 
-      shake.startWatch = function() {
-        console.log('startWatch');
-        console.log('navigator is: ' + navigator);
-        console.log('accelerometer: ' + navigator.accelerometer);
-        id = navigator.accelerometer.watchAcceleration(getAccelSnapshot, handleError, options);
-      };
+        _this.watch = $deviceMotion.watchAcceleration(options);
 
-      shake.stopWatch = function() {
-        console.log('stopWatch');
-        if(id !== null) {
-          navigator.accelerometer.clearWatch(id);
-          id = null;
-        }
-      };
+        _this.watch.then(
+          null,
+          function(err) {
+            $scope.msg = err.message;
+            alert(err.message);
+          },
+          function(motion) {
+            var accelChange = {};
+            console.log(motion);
+            if(_this.enableNext) {
+              if(prevAccel.x !== null) {
+                accelChange.x = Math.abs(prevAccel.x - motion.x);
+                accelChange.y = Math.abs(prevAccel.y - motion.y);
+                accelChange.z = Math.abs(prevAccel.z - motion.z);
+              }
 
-      function getAccelSnapshot() {
-        navigator.accelerometer.getCurrentAcceleration(accessCurAccel, handleError);
-      }
-
-      function accessCurAccel(acceleration) {
-        var accelChange = {};
-        if(_this.enableNext) {
-          if(prevAccel.x !== null) {
-            accelChange.x = Math.abs(prevAccel.x - acceleration.x);
-            accelChange.y = Math.abs(prevAccel.y - acceleration.y);
-            accelChange.z = Math.abs(prevAccel.z - acceleration.z);
-          }
-
-          if(accelChange.x + accelChange.y + accelChange.z > 25) {
-            console.log("Shake detected");
-            $scope.showNext();
-            shake.stopWatch();
-            setTimeout(shake.startWatch, 1000);
-            prevAccel = {
-              x: null,
-              y: null,
-              z: null
+              if(accelChange.x + accelChange.y + accelChange.z > 25) {
+                if(motion.timestamp - prevAccel.timestamp > 1000) {
+                  $scope.showNext();
+                  prevAccel = {
+                    x: null,
+                    y: null,
+                    z: null,
+                    timestamp: motion.timestamp
+                  }
+                } else {
+                  console.log('double trigger prevention');
+                }
+              } else {
+                prevAccel = {
+                  x: motion.x,
+                  y: motion.y,
+                  z: motion.z,
+                  timestamp: prevAccel.timestamp
+                }
+              }
             }
-          } else {
-            prevAccel = {
-              x: acceleration.x,
-              y: acceleration.y,
-              z: acceleration.z
-            }
-          }
         }
-      }
-
-      function handleError() {
-        console.log("uhhh ohh. Shake error");
-      }
-
-      return shake;
-    })();
-
-    $scope.init = function() {
-      _this.shake.startWatch();
+      );
     };
-    //_this.shake.startWatch();
+
+    document.addEventListener("deviceready", 
+      this.watchAcceleration, true);
   })
   .directive("scroll", function($window) {
     return function(scope, element, attrs) {
