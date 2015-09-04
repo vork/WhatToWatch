@@ -66,6 +66,7 @@ angular.module('projectApp')
       }).$promise.then(
         function(watched) {
           var len = watched.length;
+
           var potentialEpisodes = [];
           if(len > 15) { //limit to 15 tv shows
             len = 15;
@@ -144,25 +145,45 @@ angular.module('projectApp')
               }
               console.log(potentialEpisodes);
               if(potentialEpisodes.length == 0) {
-                alert('No potential episode to watch found'); //TODO handle this more gracefully
-              } else {
-                var toWrite = potentialEpisodes.slice(1, potentialEpisodes.length); //remove the first index and write it
-                if(toWrite.length > 0) {
-                  var toRet = '';
-                  for(var s = 0; s < toWrite.length; s++) {
-                    if(s !== 0) {
-                      toRet = toRet + ';;;';
+                //No potential episodes were found. Recommend a trending show
+                TrendingShows.query().$promise.then(
+                  function( trending ) {
+                    console.log('processing rest request');
+                    len = trending.length;
+                    if(len > 15) {
+                      len = 15;
                     }
-                    toRet = toRet + toWrite[s].showId.toString() + ';_' + toWrite[s].season + ';_' + toWrite[s].episode;
+                    for(i = 0; i < len; i++) {
+                      var show = trending[i];
+                      potentialEpisodes.push({
+                        showId: show.show.ids.trakt,
+                        season: 1,
+                        episode: 1
+                      });
+                    }
+                  },
+                  function( error ) {
+                    alert('Something went wrong');
                   }
-                }
-                toRet = btoa(toRet);
-                $location.path('/detail/' + potentialEpisodes[0].showId +
-                                    '/' + potentialEpisodes[0].season +
-                                    '/' + potentialEpisodes[0].episode +
-                                    '/' + toRet);
-
+                );
               }
+
+              //Encode all potential episodes in a single string
+              var toWrite = potentialEpisodes.slice(1, potentialEpisodes.length); //remove the first index and write it
+              if(toWrite.length > 0) {
+                var toRet = '';
+                for(var s = 0; s < toWrite.length; s++) {
+                  if(s !== 0) {
+                    toRet = toRet + ';;;';
+                  }
+                  toRet = toRet + toWrite[s].showId.toString() + ';_' + toWrite[s].season + ';_' + toWrite[s].episode;
+                }
+              }
+              toRet = btoa(toRet);
+              $location.path('/detail/' + potentialEpisodes[0].showId +
+                                  '/' + potentialEpisodes[0].season +
+                                  '/' + potentialEpisodes[0].episode +
+                                  '/' + toRet);
             }
           )
         }
