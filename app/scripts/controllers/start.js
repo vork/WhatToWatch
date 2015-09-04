@@ -13,8 +13,10 @@ angular.module('projectApp')
     _this.shows = [];
 
     function shuffle(o){
-          for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
-              return o;
+          for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x) {
+
+          }
+          return o;
     }
 
     TrendingShows.query().$promise.then(
@@ -117,8 +119,8 @@ angular.module('projectApp')
                   });
                 } else { //The user has finished the last watched season
                   var watchedContainsSpecial, airedContainsSpecial;
-                  watchedContainsSpecial = watchedSeasons[0].number == '0';
-                  airedContainsSpecial = airedSeasons[0].number == '0';
+                  watchedContainsSpecial = watchedSeasons[0].number === '0';
+                  airedContainsSpecial = airedSeasons[0].number === '0';
 
                   var watchedCount = watchedSeasons.length;
                   var airedCount = airedSeasons.length;
@@ -144,7 +146,7 @@ angular.module('projectApp')
                 }
               }
               console.log(potentialEpisodes);
-              if(potentialEpisodes.length == 0) {
+              if(potentialEpisodes.length === 0) {
                 //No potential episodes were found. Recommend a trending show
                 TrendingShows.query().$promise.then(
                   function( trending ) {
@@ -170,8 +172,8 @@ angular.module('projectApp')
 
               //Encode all potential episodes in a single string
               var toWrite = potentialEpisodes.slice(1, potentialEpisodes.length); //remove the first index and write it
+              var toRet = '';
               if(toWrite.length > 0) {
-                var toRet = '';
                 for(var s = 0; s < toWrite.length; s++) {
                   if(s !== 0) {
                     toRet = toRet + ';;;';
@@ -185,10 +187,10 @@ angular.module('projectApp')
                                   '/' + potentialEpisodes[0].episode +
                                   '/' + toRet);
             }
-          )
+          );
         }
       );
-    }
+    };
 
     function fetchShows(showID) {
       var d = $q.defer();

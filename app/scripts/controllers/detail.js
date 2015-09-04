@@ -17,7 +17,7 @@ angular.module('projectApp')
     _this.episode = $routeParams.episode;
     _this.next = $routeParams.enableNext;
 
-    if(typeof _this.episode === "undefined") {
+    if(typeof _this.episode === 'undefined') {
       _this.showEpisodeInfo = false;
     } else {
       _this.showEpisodeInfo = true;
@@ -26,7 +26,7 @@ angular.module('projectApp')
       id:_this.showId
     }).$promise.then(
       function(show) {
-        console.log("processing rest request");
+        console.log('processing rest request');
         console.log(show);
 
         _this.tvshow = ({
@@ -44,7 +44,7 @@ angular.module('projectApp')
         //Only set the rating for the tv show, if we're displaying a tv show
         if(!_this.showEpisodeInfo) {
           for(var i = 1; i <= _this.tvshow.rating; i++) {
-            var elementId = "#star" + i;
+            var elementId = '#star' + i;
             var star = angular.element(document.querySelector(elementId));
             star.removeClass('ion-android-star-outline');
             star.addClass('ion-android-star');
@@ -52,7 +52,7 @@ angular.module('projectApp')
         }
       },
       function(error) {
-        alert("Something went wrong");
+        alert('Something went wrong');
       }
     );
 
@@ -64,10 +64,10 @@ angular.module('projectApp')
 
     $scope.showNext = function() {
       var toSplit = atob($routeParams.enableNext);
-      var ids = toSplit.split(";;;");
+      var ids = toSplit.split(';;;');
       var potentialNext = [];
       for(var s = 0; s < ids.length; s++) {
-        var splitted = ids[s].split(";_");
+        var splitted = ids[s].split(';_');
         potentialNext.push({
           showId: splitted[0],
           season: splitted[1],
@@ -76,9 +76,9 @@ angular.module('projectApp')
       }
       var toWrite = potentialNext.slice(1,potentialNext.length); //remove the first index and write it
 
-      if(toWrite.length > 0) {
-        var toRet = "";
-        for(var s = 0; s < toWrite.length; s++) {
+      var toRet = '';
+      if(toWrite.length > 0) {  
+        for(s = 0; s < toWrite.length; s++) {
           if(s !== 0) {
             toRet = toRet + ';;;';
           }
@@ -102,7 +102,7 @@ angular.module('projectApp')
         episode: _this.episode
       }).$promise.then(
         function(episode) {
-          console.log("processing episode rest request");
+          console.log('processing episode rest request');
           console.log(episode);
 
           _this.ep = {
@@ -110,10 +110,10 @@ angular.module('projectApp')
             description: episode.overview,
             rating: episode.rating,
             image: episode.images.screenshot.full
-          }
+          };
 
           for(var i = 1; i <= episode.rating; i++) {
-            var elementId = "#star" + i;
+            var elementId = '#star' + i;
             var star = angular.element(document.querySelector(elementId));
             star.removeClass('ion-android-star-outline');
             star.addClass('ion-android-star');
@@ -126,7 +126,7 @@ angular.module('projectApp')
         id:_this.showId
       }).$promise.then(
         function(seasons) {
-          console.log("processing season rest request");
+          console.log('processing season rest request');
           console.log(seasons);
 
           for(var i = 0; i < seasons.length; i++) {
@@ -181,7 +181,7 @@ angular.module('projectApp')
                     y: null,
                     z: null,
                     timestamp: motion.timestamp
-                  }
+                  };
                 } else {
                   console.log('double trigger prevention');
                 }
@@ -191,17 +191,17 @@ angular.module('projectApp')
                   y: motion.y,
                   z: motion.z,
                   timestamp: prevAccel.timestamp
-                }
+                };
               }
             }
         }
       );
     };
 
-    document.addEventListener("deviceready", 
+    document.addEventListener('deviceready', 
       this.watchAcceleration, true);
   })
-  .directive("scroll", function($window) {
+  .directive('scroll', function($window) {
     return function(scope, element, attrs) {
       var header = document.querySelector('[md-page-header]');
       var baseDimensions = header.getBoundingClientRect();
@@ -233,8 +233,12 @@ angular.module('projectApp')
 
       function ratio(dim) {
         var r = (dim.bottom-baseDimensions.top)/dim.height;
-        if(r<0) return 0;
-        if(r>1) return 1;
+        if(r<0) {
+          return 0;
+        }
+        if(r>1) {
+          return 1;
+        }
         return Number(r.toString().match(/^\d+(?:\.\d{0,2})?/));
       }
 
@@ -242,7 +246,7 @@ angular.module('projectApp')
       handleStyle(baseDimensions);
 
       /* scroll event listener */
-      angular.element($window).bind("scroll", function() {
+      angular.element($window).bind('scroll', function() {
         var dimensions = header.getBoundingClientRect();
         handleStyle(dimensions);
         scope.$apply();

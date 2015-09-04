@@ -206,7 +206,7 @@ angular
     return {
       set: set,
       get: get
-    }
+    };
   })
   //Configure the routes
   .config(function ($routeProvider) {
