@@ -186,6 +186,8 @@ angular.module('projectApp')
                                   '/' + potentialEpisodes[0].season +
                                   '/' + potentialEpisodes[0].episode +
                                   '/' + toRet);
+            }, function(errorResult) {
+              alert('It is only possible to get recommendations for public profiles');
             }
           );
         }
@@ -210,4 +212,3 @@ angular.module('projectApp')
       .primaryPalette('pink')
       .accentPalette('indigo');
   });
-
